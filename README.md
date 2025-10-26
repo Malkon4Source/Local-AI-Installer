@@ -12,7 +12,7 @@ You can run this by opening your terminal and typing:
 Sometimes, the script refuses to launch, you can fix this by giving the script executable permissions by running:
 
 ```bash
-chmod +x ./AI-Install.sh -- Assuming you have the installer in your home directory, like the inscructions told you to do !
+chmod +x ./AI-Install.sh   # Assuming you have the installer in your home directory, like the inscructions told you to do !
 ```
 
 ## UPDATE
