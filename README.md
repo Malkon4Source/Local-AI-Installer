@@ -12,3 +12,5 @@ You can run this by opening your terminal and typing:
 ## UPDATE
 
 Added new model called "GPT-oss" that is supposed to be an Open-Source alternative to ChatGPT !
+Added a feature that encourages user to run script as root !
+###### Other than that, I really did not make many changes, I was tired  -.-
