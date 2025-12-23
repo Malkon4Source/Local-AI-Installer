@@ -1,36 +1,33 @@
 #!/bin/bash
 
-echo "Welcome to Malkon's Ollama installer ! [v0.3]"
+echo "Welcome to Malkon's Ollama installer ! [v0.4]"
 echo "I don't host the models listed, this is just to simplify the installation of a local AI !"
-echo "Also credits to everyone who made the models and who made Ollama !"
+echo "Also credits to everyone who made the models and Ollama !"
 echo "Published under the GPL license !"
 
-echo "I recommend running this script as root (sudo) !"
-read -p "Have you run this script as root? [y/n]: " rootconfirm
+current_shell=$(basename "$SHELL")
+echo "Detected your current shell: $current_shell"
+
+
+echo "I recommend NOT running this script using sudo !"
+read -p "Have you run this script using sudo? [y/n]: " rootconfirm
 
 case $rootconfirm in
-     y|yes)
-        echo "Cool! We'll continue running the script for you !"
-        ;;
-
-     n|no)
-       read -p "Do you care? [y/n]: " IDC
-       case $IDC in
-       y|yes)
-        echo "Then go run the script as root !"
-        exit 1
-        ;;
-
-       n|no)
-        echo "Oh, okay lol !"
-        ;;
-       *)
-       echo "Enter something listed, silly !"
-       exit 1
-       esac
-       ;;
-     *)
-       echo "Enter something listed, silly !"
+y|yes)
+read -p "I recommend NOT doing so, but do you wish to continue anyway? [y/n] " DYC
+    case $DYC in
+    y|yes)
+    echo "Okay, then I assume you know what you're doing !"
+    ;;
+    n|no)
+    echo "Okay, just run the script normally, and it'll work !"
+    exit 1
+    ;;
+    esac
+;;
+n|no)
+echo "Goodie !"
+;;
 esac
 
 
@@ -86,10 +83,10 @@ if ! command -v ollama &> /dev/null || ! ollama --version &> /dev/null; then
 
     curl -fsSL https://ollama.com/install.sh | sh
 
-    echo "Ollama installed successfully! Please restart the terminal if needed, or your system may not detect Ollama !"
+    echo "Ollama installed successfully ! Please restart the terminal if needed, or your system may not detect Ollama !"
 
  exit 0
-else
+
  echo "Ollama is already installed and working !"
 fi
 
@@ -98,22 +95,16 @@ sleep 0.25
 
 echo "Choose a model to install:"
 echo
-echo " #   Model                    Size     Purpose"
-echo "-------------------------------------------------------------"
-echo " 1)  Phi 4                    9.1GB    Smart. Fast. For general use. Requires reasonably beefy computer, though."
+echo "Format: Name (Size, Parameter)"
 echo
-echo " 2)  Gemma 3                  815MB    Recommended for most users who just want stuff that works"
-echo
-echo " 3)  Codellama                3.8GB    Dedicated coding assistant. You can probably tell by the name."
-echo
-echo " 4)  Llama 2 Uncensored       3.8GB    Less censored general use AI... I wonder why you would need this."
-echo
-echo " 5)  Phi 4 Mini               2.5GB    Phi 4 except it's recommendable for an average user"
-echo
-echo " 6)  GPT-oss                  14GB     Kinda like ChatGPT, but open-source !"
-echo
-echo " 7)  I'm not sure...          NaN(0)   You're just unsure, we don't blame you. This is for recommendations !"
-echo
+echo "1) Phi 4 (9.1 GB, 14B)"
+echo "2) Gemma 3 (815 MB, 1B)"
+echo "3) Codellama (3.8 GB, 7B)"
+echo "4) llama2-uncensored (3.8 GB, 7B)"
+echo "5) Phi4-mini (2.5 GB, 3.8B)"
+echo "6) GPT-oss (14 GB, 20B)"
+echo "7) I'm unsure..."
+echo "8) I wanna name my own model !"
 echo
 
 read -p "Enter the number of the model you want to install [1-7]: " choice
@@ -140,17 +131,22 @@ case $choice in
     7)
         echo "Hi! I'll help you out for this!"
 echo
-        echo "1. Are you just chilling on your laptop, or any other personal device? You should use Phi 4 Mini or Gemma 3! Phi 4 Mini requires a slightly better device in terms of performance, while Gemma 3 is your go-to for average use !"
+        echo "1. Are you just chilling on your laptop, or any other personal device ? You should use Phi 4 Mini or Gemma 3! Phi 4 Mini requires a slightly better device in terms of performance, while Gemma 3 is your go-to for average use !"
 echo
-        echo "2. Maybe you have a beefy computer or device? Something dedicated for pure performance? Possibly something you built and knew what you did with? Phi 4 is your go !"
+        echo "2. Maybe you have a beefy computer or device ? Something dedicated for pure performance?  Possibly something you built and knew what you did with? Phi 4 is your go !"
 echo
-        echo "3. Maybe you have a server? Multiple Graphics Processing Units? Amounts of RAM you didn't know existed? Phi 4 is pretty good, but you're probably gonna be liking Codellama for this !"
+        echo "3. Maybe you have a server ? Multiple Graphics Processing Units ? Amounts of RAM you didn't know existed? Phi 4 is pretty good, but you're probably gonna be liking Codellama or GPT-oss for this !"
 echo
-        echo "We will add more models later, as for now this is just a test and is WIP! So don't feel down if your prefered model is not on here, there are probably tons of tutorials showing you how to install your prefered model !"
+        echo "We will add more models later, as for now this is just a test and is WIP ! So don't feel down if your prefered model is not on here, there are probably tons of tutorials showing you how to install your prefered model !"
 echo
         echo "You don't have to worry about installing Ollama, this script likely already did that for you !"
 echo
 exit 0
+        ;;
+    8)
+        echo "Check out https://ollama.com/library for models !"
+        read -p "What's the model name you wanna use?: " CustomModel
+        model="$CustomModel"
         ;;
     *)
         echo "Pick something that's listed, silly !"
@@ -160,9 +156,15 @@ esac
 
 echo "You selected: $model"
 echo "Starting Ollama... :-P"
-ollama serve &
-echo "Pulling model from Ollama... :-P"
-ollama pull "$model"
+ollama serve
+echo "Pulling model from Ollama, this may take some time... :-P"
+#ollama pull "$model"
+if ! ollama pull "$model"; then
+echo "Uh oh, we failed to pull your model, named $model !"
+echo "This could be an error related to Internet Connection, or to the model name listed !"
+echo "We're exiting the script for you to prevent running or generating invalid code !"
+exit 1
+fi
 
 cat <<EOF > $HOME/AI.sh
 #!/bin/bash
@@ -175,11 +177,46 @@ EOF
 chmod +x ~/AI.sh
 echo "Created AI.sh in the home directory (~/AI.sh) and made it executable successfully !"
 
-echo
+while true; do
+echo "Which shell do you want the alias installed in? "
+echo "1) Bash"
+echo "2) Zsh"
+echo "3) Fish"
+echo "4) Skip"
+read -p "Enter the number: " shell_choice
+case "$shell_choice" in
+    1) grep -qxF 'alias AI="$HOME/AI.sh"' ~/.bashrc || echo 'alias AI="$HOME/AI.sh"' >> ~/.bashrc
+    echo "Please restart your terminal after script has finished running to make the alias properly work !"
+    break
+    ;;
+    2) grep -qxF 'alias AI="$HOME/AI.sh"' ~/.zshrc || echo 'alias AI="$HOME/AI.sh"' >> ~/.zshrc
+    echo "Please restart your terminal after script has finished running to make the alias properly work !"
+    break
+    ;;
+    3)
+mkdir -p ~/.config/fish
+touch ~/.config/fish/config.fish
+grep -q "function AI" ~/.config/fish/config.fish || cat <<EOF >> ~/.config/fish/config.fish
+function AI
+~/AI.sh
+end
+EOF
+echo "Please restart your terminal after script has finished running to make the alias properly work !"
+    break
+    ;;
+    4) echo "Skipping alias creation..."
+    break
+    ;;
+    *) echo "Enter a listed option, please !"
+    ;;
+esac
+
+done
+
 echo "Done! You can now run your AI by typing: ~/AI.sh"
 
 
-read -p "Do you want to launch the AI now? [y/n]: " choice2
+read -p "Do you want to launch the AI now ? [y/n]: " choice2
 
 case "${choice2,,}" in
      y|yes)
