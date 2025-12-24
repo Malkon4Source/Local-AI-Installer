@@ -18,6 +18,9 @@ chmod +x ./AI-Install.sh   # Assuming you have the installer in your home direct
 ## UPDATE
 
 Added a feature that discourages user to run script using sudo, otherwise it would install stuff in the wrong directories !
+
 Fixed a few bugs !
+
 Added an option to add an alias to your shell configuration file, making ease of access to your AI easier by just typing 'AI' in your terminal !
+
 Improved support for Fish (Friendly Interactive Shell), I support your philosophy, non-posix users !
