@@ -18,5 +18,5 @@ chmod +x ./AI-Install.sh   # Assuming you have the installer in your home direct
 ## UPDATE
 
 Added new model called "GPT-oss" that is supposed to be an Open-Source alternative to ChatGPT !
-Added a feature that encourages user to run script as root !
+Added a feature that discourages user to run script using sudo, otherwise it would install stuff in the wrong directories !
 ###### Other than that, I really did not make many changes, I was tired  -.-
