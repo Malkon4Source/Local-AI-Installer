@@ -1,3 +1,6 @@
+# WARNING
+### This repo is old and not actively maintained anymore as I no longer use this script. Use at your own risk.
+
 This script installs Ollama for you !
 It is simply made to make the local AI installation for you simple !
 
